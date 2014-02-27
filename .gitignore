@@ -1,4 +1,4 @@
-*.pem
-*.p12
 *.cer
+*.p12
+*.log
 node_modules/
