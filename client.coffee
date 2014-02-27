@@ -9,7 +9,7 @@ fs = require 'fs'
 class Client extends EventEmitter
 
 	log: (thing) ->
-		winston.info thing
+		console.log thing
 
 	constructor: (@options) ->
 
@@ -38,12 +38,12 @@ class Client extends EventEmitter
 
 		# Listen for childAdded events
 		@rootRef.on 'child_added', (snapshot) =>
-			@parseItem snapshot.val()
+			@parseItem snapshot.val(), snapshot.ref()
 		
 
-	parseItem: (item) =>
-		winston.info 'got item to parse!'
-		winston.info item
+	parseItem: (item, ref) =>
+		@log 'got item to parse!'
+		@log item
 
 		# TODO - check to make sure all of the required fields are there - especially deviceToken
 
@@ -71,7 +71,13 @@ class Client extends EventEmitter
 		console.log note
 
 		# Do the damn thing
-		@connection.pushNotification note, device
+		setTimeout =>
+			@connection.pushNotification note, device
+			@deleteNotification ref
+		, 2000
+
+	deleteNotification: (ref) ->
+		ref.remove()
 
 		# Default notification options
 		# defaults = 
