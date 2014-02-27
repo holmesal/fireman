@@ -1,6 +1,6 @@
 {
   "name": "earshot-server",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "dependencies": {
     "firebase": "~1.0.5",
     "apn": "~1.4.4",
