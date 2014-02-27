@@ -1,0 +1,91 @@
+{EventEmitter} = require 'events'
+winston = require 'winston'
+Firebase = require 'firebase'
+apn = require 'apn'
+fs = require 'fs'
+# Export a class for a client
+
+
+class Client extends EventEmitter
+
+	log: (thing) ->
+		winston.info thing
+
+	constructor: (@options) ->
+
+		# TODO - check options and emit an error if missing things
+
+		# Event listeners
+
+		# Create the APN connection
+		@initAPN()
+
+		# Init their firebase connections
+		@initFirebase()
+
+	initAPN: ->
+		# APN options
+		apnOptions = 
+			gateway: 'gateway.sandbox.push.apple.com'
+
+		# Create the connection
+		@connection = new apn.connection @options
+
+	initFirebase: =>
+		# Connect to their firebase
+		@rootRef = new Firebase @options.pushQueueURL
+
+		# Listen for childAdded events
+		@rootRef.on 'child_added', (snapshot) =>
+			@parseItem snapshot.val()
+		
+
+	parseItem: (item) =>
+		winston.info 'got item to parse!'
+		winston.info item
+
+		# TODO - refactor to look for the device token in a specific location
+
+		# TODO - check to make sure all of the required fields are there
+
+		# Create a new device
+		device = new apn.Device item.deviceToken
+
+		# Create a new notification
+		note = new apn.Notification
+
+		# Use provided options, or defaults
+		if item.expiry
+			note.expiry = item.expiry
+		else
+			note.expiry = Math.floor(Date.now() / 1000) + 3600
+		
+		note.badge = if item.badge then item.badge else 1
+		note.sound = if item.sound then item.sound else 'ping.aiff'
+		note.alert = if item.alert then item.alert else 'Hello from Fireman!'
+		if item.payload
+			note.payload = item.payload
+		else
+			note.payload = 
+				fireman: 'such push. very notify.'
+
+		console.log note
+
+		# Do the damn thing
+		@connection.pushNotification note, device
+
+		# Default notification options
+		# defaults = 
+		# 	expiry: Math.floor(Date.now() / 1000) + 3600
+		# 	badge: 1
+		# 	sound: 'ping.aiff'
+		# 	alert: 'Hello from Fireman!'
+		# 	payload:
+		# 		fireman: 'such wow'
+
+		# Extend with any options they set
+		# options = defaults.extend @options
+
+
+module.exports = Client
+

@@ -3,17 +3,32 @@ Firebase = require 'firebase'
 apn = require 'apn'
 winston = require 'winston'
 
+# Store clients in a firebase
+Client = require './client'
+
+
 # Firebase creds
 # TODO - add private firebase creds when that makes sense
 rootRef = new Firebase 'http://orbit.firebaseio.com'
-pushQueue = rootRef.child 'pushQueue'
+# pushQueue = rootRef.child 'pushQueue'
 
 # APN options
 apnOptions = 
 	gateway: 'gateway.sandbox.push.apple.com'
 
+
+clientOptions = 
+	pushQueueURL: 'http://orbit.firebaseio.com/pushQueue'
+	# certData: 'some-cert-data'
+	# keyData: 'some-key-data'
+
+# Create a new client
+client = new Client clientOptions
+
+
+
 # Create a new connection with the apn servers
-apnConnection = new apn.Connection apnOptions
+# apnConnection = new apn.Connection apnOptions
 
 # Parser for push queue items
 parseItem = (item) ->
@@ -23,18 +38,18 @@ parseItem = (item) ->
 	# For now, assume it's a valid notification to send
 	# for receiver in item.receivers
 	# 	winston.ind
-	receiverID = '61483:23458'
+	# receiverID = '61483:23458'
 	sendPushTo receiverID, item
 
 # Send a push notification to the mentioned receiver
 sendPushTo = (userID, data) ->
 	# Get the owner's device token
-	user = rootRef.child('users').child(userID).child('pushToken')
+	# user = rootRef.child('users').child(userID).child('pushToken')
 	user.once 'value', (snapshot) ->
 		token = snapshot.val()
 
 		# Construct a device with this token
-		device = new apn.Device token
+		device = new apn.Device data.deviceToken
 
 		# Construct a notification with this device
 		note = new apn.Notification
@@ -57,5 +72,5 @@ removeSnapshot = (snapshot) ->
 	snapshot.ref().remove()
 
 # Set a listener for new items - this will also fire for every item in the queue when the server starts
-pushQueue.on 'child_added', (snapshot) ->
-	parseItem snapshot.val()
+# pushQueue.on 'child_added', (snapshot) ->
+# 	parseItem snapshot.val()
