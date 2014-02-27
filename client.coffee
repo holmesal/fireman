@@ -20,16 +20,17 @@ class Client extends EventEmitter
 		# Create the APN connection
 		@initAPN()
 
-		# Init their firebase connections
 		@initFirebase()
 
 	initAPN: ->
 		# APN options
 		apnOptions = 
 			gateway: 'gateway.sandbox.push.apple.com'
+			key: @options.key
+			cert: @options.cert
 
 		# Create the connection
-		@connection = new apn.connection @options
+		@connection = new apn.connection apnOptions
 
 	initFirebase: =>
 		# Connect to their firebase
@@ -44,9 +45,7 @@ class Client extends EventEmitter
 		winston.info 'got item to parse!'
 		winston.info item
 
-		# TODO - refactor to look for the device token in a specific location
-
-		# TODO - check to make sure all of the required fields are there
+		# TODO - check to make sure all of the required fields are there - especially deviceToken
 
 		# Create a new device
 		device = new apn.Device item.deviceToken

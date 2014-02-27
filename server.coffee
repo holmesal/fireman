@@ -19,6 +19,7 @@ apnOptions =
 
 clientOptions = 
 	pushQueueURL: 'http://orbit.firebaseio.com/pushQueue'
+	# TODO - host these files on S3 and read them in here
 	# certData: 'some-cert-data'
 	# keyData: 'some-key-data'
 
