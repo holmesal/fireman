@@ -3,6 +3,8 @@ Firebase = require 'firebase'
 apn = require 'apn'
 winston = require 'winston'
 
+http = require 'http'
+
 # Store clients in a firebase
 Client = require './client'
 
@@ -75,3 +77,5 @@ removeSnapshot = (snapshot) ->
 # Set a listener for new items - this will also fire for every item in the queue when the server starts
 # pushQueue.on 'child_added', (snapshot) ->
 # 	parseItem snapshot.val()
+
+http.createServer((req, res) ->).listen(process.env.PORT || 5000)
