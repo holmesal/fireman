@@ -1,4 +1,4 @@
-
+require 'newrelic'
 Firebase = require 'firebase'
 apn = require 'apn'
 winston = require 'winston'
