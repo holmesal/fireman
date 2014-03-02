@@ -38,7 +38,13 @@ class Client extends EventEmitter
 
 		# Listen for childAdded events
 		@rootRef.on 'child_added', (snapshot) =>
-			@parseItem snapshot.val(), snapshot.ref()
+			try
+				@parseItem snapshot.val(), snapshot.ref()
+			catch err
+				console.error "Error parsing item... deleting..."
+				console.error snapshot.val()
+				console.error err
+				@deleteNotification snapshot.ref()
 		
 
 	parseItem: (item, ref) =>
