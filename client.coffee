@@ -66,7 +66,7 @@ class Client extends EventEmitter
 			note.expiry = Math.floor(Date.now() / 1000) + 3600
 		
 		note.badge = if item.badge then item.badge else 1
-		note.sound = if item.sound then item.sound else 'ping.aiff'
+		note.sound = if item.sound then item.sound else 'default'
 		note.alert = if item.alert then item.alert else 'Hello from Fireman!'
 		if item.payload
 			note.payload = item.payload
