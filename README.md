@@ -9,3 +9,4 @@ todo
 * Handle missing device tokens before trying to push to devices
 * Un-hardcode the device id (test with multiple devices)
 * Check elapsed time since last notification and cancel if too soon
+* handle other providers
