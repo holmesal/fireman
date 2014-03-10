@@ -78,4 +78,11 @@ removeSnapshot = (snapshot) ->
 # pushQueue.on 'child_added', (snapshot) ->
 # 	parseItem snapshot.val()
 
-http.createServer((req, res) ->).listen(process.env.PORT || 5000)
+
+# Create a little http server to respond to requests
+http = require 'http'
+server = http.createServer (req, res) ->
+	res.writeHead 200, 
+		'Content-Type': 'text/plain'
+	res.end 'The earshot server is up!'
+server.listen process.env.PORT
