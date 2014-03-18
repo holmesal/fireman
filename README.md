@@ -3,6 +3,8 @@ earshot-server
 
 This server listens to the messaging queue located at `pushQueue` on the root of the firebase, and sends push notifications to devies using the apple push notification server api.
 
+Ah shit this is the tits.
+
 todo
 ===
 
