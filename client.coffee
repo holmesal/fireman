@@ -85,7 +85,9 @@ class Client extends EventEmitter
 
 		else
 			winston.error "No device token passed! Deleting!"
-			@deleteNotification ref
+			setTimeout =>
+				@deleteNotification ref
+			, 2000
 
 	deleteNotification: (ref) ->
 		ref.remove()
