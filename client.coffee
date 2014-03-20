@@ -52,35 +52,40 @@ class Client extends EventEmitter
 		@log item
 
 		# TODO - check to make sure all of the required fields are there - especially deviceToken
+		if deviceToken
 
-		# Create a new device
-		device = new apn.Device item.deviceToken
+			# Create a new device
+			device = new apn.Device item.deviceToken
 
-		# Create a new notification
-		note = new apn.Notification
+			# Create a new notification
+			note = new apn.Notification
 
-		# Use provided options, or defaults
-		if item.expiry
-			note.expiry = item.expiry
+			# Use provided options, or defaults
+			if item.expiry
+				note.expiry = item.expiry
+			else
+				note.expiry = Math.floor(Date.now() / 1000) + 3600
+			
+			note.badge = if item.badge then item.badge else 1
+			note.sound = if item.sound then item.sound else 'default'
+			note.alert = if item.alert then item.alert else 'Hello from Fireman!'
+			if item.payload
+				note.payload = item.payload
+			else
+				note.payload = 
+					fireman: 'such push. very notify.'
+
+			console.log note
+
+			# Do the damn thing
+			setTimeout =>
+				@connection.pushNotification note, device
+				@deleteNotification ref
+			, 2000
+
 		else
-			note.expiry = Math.floor(Date.now() / 1000) + 3600
-		
-		note.badge = if item.badge then item.badge else 1
-		note.sound = if item.sound then item.sound else 'default'
-		note.alert = if item.alert then item.alert else 'Hello from Fireman!'
-		if item.payload
-			note.payload = item.payload
-		else
-			note.payload = 
-				fireman: 'such push. very notify.'
-
-		console.log note
-
-		# Do the damn thing
-		setTimeout =>
-			@connection.pushNotification note, device
+			winston.error "No device token passed! Deleting!"
 			@deleteNotification ref
-		, 2000
 
 	deleteNotification: (ref) ->
 		ref.remove()
