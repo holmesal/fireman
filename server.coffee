@@ -4,6 +4,7 @@ apn = require 'apn'
 winston = require 'winston'
 
 http = require 'http'
+express = require 'express'
 
 # Store clients in a firebase
 Client = require './client'

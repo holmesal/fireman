@@ -2,7 +2,7 @@
 winston = require 'winston'
 Firebase = require 'firebase'
 apn = require 'apn'
-fs = require 'fs'
+# fs = require 'fs'
 # Export a class for a client
 
 
