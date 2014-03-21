@@ -2,9 +2,7 @@ require 'newrelic'
 Firebase = require 'firebase'
 apn = require 'apn'
 winston = require 'winston'
-
 http = require 'http'
-express = require 'express'
 
 # Store clients in a firebase
 Client = require './client'
@@ -80,8 +78,7 @@ removeSnapshot = (snapshot) ->
 # 	parseItem snapshot.val()
 
 
-# Create a little http server to respond to requests
-http = require 'http'
+# Create a little http server to respond to uptime requests
 server = http.createServer (req, res) ->
 	res.writeHead 200, 
 		'Content-Type': 'text/plain'
