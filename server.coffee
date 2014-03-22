@@ -10,12 +10,8 @@ Client = require './client'
 
 # Firebase creds
 # TODO - add private firebase creds when that makes sense
-rootRef = new Firebase 'http://orbit.firebaseio.com'
-# pushQueue = rootRef.child 'pushQueue'
-
-# APN options
-apnOptions = 
-	gateway: 'gateway.sandbox.push.apple.com'
+rootRef = new Firebase 'http://fireman.firebaseio.com'
+users = rootRef.child 'users'
 
 
 clientOptions = 
@@ -25,7 +21,12 @@ clientOptions =
 	# keyData: 'some-key-data'
 
 # Create a new client
-client = new Client clientOptions
+# client = new Client clientOptions
+
+# Set up and bind all of the existing clients
+users.on 'child_added', (snapshot) ->
+	console.log "New client!"
+	client = new Client snapshot.ref()
 
 
 
@@ -64,7 +65,7 @@ sendPushTo = (userID, data) ->
 			messageFrom: 'Bob Barker'
 			# 'content-available': 1
 
-		winston.info "pushing notification to token #{token}"
+		@log "pushing notification to token #{token}"
 
 		# Push out on the apn connection
 		apnConnection.pushNotification note, device
